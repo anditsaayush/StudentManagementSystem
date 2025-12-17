@@ -1,0 +1,19 @@
+```
+# Visual Studio
+.vs/
+*.vsidx
+*.user
+*.suo
+
+# Build outputs
+bin/
+obj/
+Debug/
+Release/
+
+# Database
+*.sqlite
+*.db
+
+# Logs
+*.log
