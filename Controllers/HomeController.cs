@@ -1,28 +1,43 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Data;
-using StudentManagementSystem.Models;
-using System.Diagnostics;
 
 namespace StudentManagementSystem.Controllers
 {
     public class HomeController : Controller
     {
-        
+        private readonly AppDbContext _context;
+
+        public HomeController(AppDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
+            var students = _context.Students.ToList();
+
+            ViewBag.TotalStudents = students.Count;
+            ViewBag.TotalDepartments = students
+                .Select(s => s.Department)
+                .Distinct()
+                .Count();
+
+            ViewBag.TotalSemesters = students
+                .Select(s => s.Semester)
+                .Distinct()
+                .Count();
+
+            ViewBag.RecentStudents = students
+                .OrderByDescending(s => s.Id)
+                .Take(5)
+                .ToList();
+
             return View();
         }
 
         public IActionResult Privacy()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
